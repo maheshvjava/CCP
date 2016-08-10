@@ -99,9 +99,8 @@ public class ManageCarPoolController extends BaseController {
 		return JsonResponse.getInstance().getPoolRequestsentMessage();
 	}
 	
-	@RequestMapping(value="/trip/list", method= {RequestMethod.POST}, consumes = { "application/json;charset=utf-8"},  produces = { "application/json;harset=utf-8" } )
-	public String UserTrips(@RequestBody Trip tripreq, BindingResult result, SessionStatus status,
-			HttpServletRequest request) throws ParseException, JsonProcessingException {
+	@RequestMapping(value="/trip/list", method= {RequestMethod.GET},  produces = { "application/json;harset=utf-8" } )
+	public String UserTrips(HttpServletRequest request) throws ParseException, JsonProcessingException {
 		
 		//common code which needs to be included in each request to validate the token
 		User user = this.validateToken(request);

@@ -32,8 +32,7 @@ public class Trip implements Serializable {
 				+ ", destinationlng=" + destinationlng + ", googleid="
 				+ googleid + ", polyline=" + polyline + ", source=" + source
 				+ ", sourcelat=" + sourcelat + ", sourcelng=" + sourcelng
-				+ ", status=" + status + ", stepsjsoninput=" + stepsjsoninput
-				+ ", stepsjson=" + stepsjson + ", poolrqsts=" + poolrqsts 
+				+ ", status=" + status + ", poolrqsts=" + poolrqsts 
 				+ ", user="+ user + "]";
 	}
 
@@ -72,29 +71,6 @@ public class Trip implements Serializable {
 	private double sourcelng;
 
 	private int status;
-	
-	@JsonProperty("stepsjson")
-	@Transient
-	private Object stepsjsoninput;
-	
-	public Object getStepsjsoninput() {
-		return this.stepsjsoninput;
-	}
-
-	public void setStepsjsoninput(Object stepsjsoninput) {
-		this.stepsjsoninput = stepsjsoninput;
-	}
-	
-	@JsonIgnore
-	private String stepsjson;
-	
-	public String getStepsjson() {
-		return this.stepsjson;
-	}
-
-	public void setStepsjson(String stepsjson) {
-		this.stepsjson = stepsjson;
-	}
 	
 	public Trip() {
 	}
@@ -181,7 +157,6 @@ public class Trip implements Serializable {
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="tripid", insertable = false, updatable = false)
-	//@OneToMany(mappedBy="trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<PoolRqst> poolrqsts = new HashSet<PoolRqst>();
 
 

@@ -17,6 +17,8 @@ public class ConstantParams {
 	public static final String googleMapsApiUrl = "https://maps.googleapis.com/maps/api/directions/json";
 	public static final String googleMapsApiKey = "";
 	
+	public static final String GCMServerKey = "AIzaSyByCTvA4oGLNUU-kwAa2pl-ijF7gQlyvHc";
+	
 	public static Long getTimeDiff(Date dateOne, Date dateTwo) {
         long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
         return TimeUnit.MILLISECONDS.toMinutes(timeDiff);

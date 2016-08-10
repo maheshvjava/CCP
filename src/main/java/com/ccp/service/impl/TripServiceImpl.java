@@ -26,8 +26,8 @@ public class TripServiceImpl implements TripService {
 	
 	@Override
 	@Transactional
-	public List<Trip> tripList(String googleid, Date datetime) {
-		return this.tripDAO.tripList(googleid, datetime);
+	public List<Trip> tripList(String googleid) {
+		return this.tripDAO.tripList(googleid);
 	}
 	
 

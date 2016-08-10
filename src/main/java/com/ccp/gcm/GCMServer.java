@@ -2,6 +2,7 @@ package com.ccp.gcm;
 
 import java.util.Date;
 
+import com.ccp.controller.ConstantParams;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
@@ -21,9 +22,16 @@ public class GCMServer {
 	  return gcmServer;
 	}
 	
-	private String apikey = "AIzaSyATwixclj23JwUHLxGUXFoO4ghyEjAkkBc";
-	private String androidApiKey = "AIzaSyD3rMvwEtL1gqwhTDR21rpwJkxEIMcZTIg";
+	private String deviceKey;
 	
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
 	private String message;
 	
     public String getMessage() {
@@ -46,7 +54,7 @@ public class GCMServer {
                     //Please add here your project API key: "Key for browser apps (with referers)".
                     //If you added "API key Key for server apps (with IP locking)" or "Key for Android apps (with certificates)" here
                     //then you may get error responses.
-                    Sender sender = new  Sender(gcmserver.apikey);
+                    Sender sender = new  Sender(ConstantParams.GCMServerKey);
 
                     // use this to send message with payload data
                     Message message = new Message.Builder()
@@ -57,7 +65,7 @@ public class GCMServer {
                     .build();  
   
                     //Use this code to send notification message to a single device
-                    Result result = sender.send(message, gcmserver.androidApiKey, 1);
+                    Result result = sender.send(message, gcmserver.getDeviceKey(), 1);
                     System.out.println("Message Result: "+result.toString()); //Print message result on console
 
                     /*//Use this code to send notification message to multiple devices

@@ -51,7 +51,6 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getNeedVehicleInfoMessage();
 		}
 		
-		tripreq.setStepsjson(tripreq.getStepsjsoninput().toString());
 		tripreq.setGoogleid(user.getGoogleid());
 		this.tripService.save(tripreq);
 		
@@ -66,6 +65,10 @@ public class ManageCarPoolController extends BaseController {
 		User user = this.validateToken(request);
 		if(user == null) {
 			return JsonResponse.getInstance().getAuthErrorMessage();
+		}
+		
+		if(request.getHeader("registerationID") == null) {
+			return JsonResponse.getInstance().getInsufficientMessage();
 		}
 		
 		if(!this.requiredParamsForPoolRequest(poolrqstreq)) {
@@ -89,8 +92,9 @@ public class ManageCarPoolController extends BaseController {
 		this.poolRqstService.save(poolrqstreq);
 		
 		//GCM Push Notification
-		/*GCMServer.getInstance().buildMessage(request.getHeader("token"), selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
-		GCMServer.getInstance().pushMessage();*/
+		GCMServer.getInstance().buildMessage(request.getHeader("token"), selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
+		GCMServer.getInstance().setDeviceKey(request.getHeader("registerationID"));
+		GCMServer.getInstance().pushMessage();
 		
 		return JsonResponse.getInstance().getPoolRequestsentMessage();
 	}
@@ -105,7 +109,7 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getAuthErrorMessage();
 		}
 		
-		List<Trip> triplist = this.tripService.tripList(user.getGoogleid(), tripreq.getDevicedatetime());
+		List<Trip> triplist = this.tripService.tripList(user.getGoogleid());
 		
 		Gson gson = new GsonBuilder()
 		.setDateFormat(ConstantParams.dateTimeInputFormat)

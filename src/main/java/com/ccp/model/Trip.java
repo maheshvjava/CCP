@@ -33,9 +33,8 @@ public class Trip implements Serializable {
 				+ googleid + ", polyline=" + polyline + ", source=" + source
 				+ ", sourcelat=" + sourcelat + ", sourcelng=" + sourcelng
 				+ ", status=" + status + ", stepsjsoninput=" + stepsjsoninput
-				+ ", stepsjson=" + stepsjson + ", devicedatetime="
-				+ devicedatetime + ", poolrqsts=" + poolrqsts + ", user="
-				+ user + "]";
+				+ ", stepsjson=" + stepsjson + ", poolrqsts=" + poolrqsts 
+				+ ", user="+ user + "]";
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -97,18 +96,6 @@ public class Trip implements Serializable {
 		this.stepsjson = stepsjson;
 	}
 	
-	@Transient
-	@JsonDeserialize(using = CustomJsonDateDeserializerWithoutTimeZone.class)
-	private Date devicedatetime;
-
-	public Date getDevicedatetime() {
-		return devicedatetime;
-	}
-
-	public void setDevicedatetime(Date devicedatetime) {
-		this.devicedatetime = devicedatetime;
-	}
-
 	public Trip() {
 	}
 

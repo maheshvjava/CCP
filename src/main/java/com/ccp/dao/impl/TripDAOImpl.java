@@ -50,7 +50,7 @@ public class TripDAOImpl implements TripDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Trip> tripList(String googleid, Date datetime) {
+	public List<Trip> tripList(String googleid) {
 		Session session = this.sessionFactory.openSession();
        	try {
        		Criteria criteria = session.createCriteria(Trip.class);

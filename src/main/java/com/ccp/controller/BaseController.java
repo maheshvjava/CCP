@@ -205,8 +205,8 @@ public class BaseController implements ServletContextAware {
 		
 		try {
 			if(trip.getDatetime() != null && !trip.getSource().isEmpty() && !trip.getDestination().isEmpty() &&
-				 trip.getPolyline() != null && trip.getDevicedatetime() != null && trip.getSourcelat() != 0 &&
-				 trip.getSourcelng() != 0 && trip.getDestinationlat() != 0 && trip.getDestinationlng() != 0) {
+				 trip.getPolyline() != null && trip.getSourcelat() != 0 && trip.getSourcelng() != 0 
+				 && trip.getDestinationlat() != 0 && trip.getDestinationlng() != 0) {
 				 return true;
 			}
 		}

@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 
-import com.ccp.gcm.GCMServer;
 import com.ccp.json.JsonResponse;
 import com.ccp.json.PoolRqstExclusionStrategy;
 import com.ccp.json.TripExclusionStrategy;
 import com.ccp.model.PoolRqst;
 import com.ccp.model.Trip;
 import com.ccp.model.User;
+import com.ccp.pushnotification.FCMServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,7 +50,6 @@ public class ManageCarPoolController extends BaseController {
 		if(user.getVehicle() == null) {
 			return JsonResponse.getInstance().getNeedVehicleInfoMessage();
 		}
-		
 		tripreq.setGoogleid(user.getGoogleid());
 		this.tripService.save(tripreq);
 		
@@ -59,7 +58,7 @@ public class ManageCarPoolController extends BaseController {
 	
 	@RequestMapping(value="/pool/request", method= {RequestMethod.POST}, consumes = { "application/json;charset=utf-8"},  produces = { "application/json;harset=utf-8" } )
 	public String TripRequest(@RequestBody PoolRqst poolrqstreq, BindingResult result, SessionStatus status,
-			HttpServletRequest request) throws ParseException, JsonProcessingException {
+			HttpServletRequest request) throws Exception {
 		
 		//common code which needs to be included in each request to validate the token
 		User user = this.validateToken(request);
@@ -91,10 +90,8 @@ public class ManageCarPoolController extends BaseController {
 		poolrqstreq.setGoogleid(user.getGoogleid());
 		this.poolRqstService.save(poolrqstreq);
 		
-		//GCM Push Notification
-		GCMServer.getInstance().buildMessage(request.getHeader("token"), selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
-		GCMServer.getInstance().setDeviceKey(request.getHeader("registerationID"));
-		GCMServer.getInstance().pushMessage();
+		FCMServer.getInstance().buildMessage(selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
+		FCMServer.getInstance().send();
 		
 		return JsonResponse.getInstance().getPoolRequestsentMessage();
 	}

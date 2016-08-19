@@ -11,8 +11,7 @@ public class FCMServer {
 	
 	//Method to send Notifications from server to client end.
 	public final static String AUTH_KEY_FCM = "AIzaSyByCTvA4oGLNUU-kwAa2pl-ijF7gQlyvHc";
-	public final static String AUTH_KEY_ANDROID_KEY = "AIzaSyCuZmovApFvq3fnvZh2f2ZtkGYxrSJEvFk";
-	public final static String AUTH_KEY_IOS_KEY = "c5K6YLF-MU8:APA91bHyP5Wrmu1TOhA4_tiU7tM_nOQMRJULlVLfbm7bkbwjEANWlXrfrJ4IWDLB9phMFG4k-bPPit1RIF7NP_sFp0Hqau_5BWnhU1BCY8K2zaYTfafvaPXBLgOJf9kqowezqoacFesr";
+	public final static String AUTH_KEY_IOS_KEY = "cEhiDTXmQwk:APA91bFcTTUy0cSQbLOV1kZdrD7u32oIe0fzGkMk3lxNLBUhnzRumX0SeIPJ1cAAap3InwCa098EaAl0N1f6NAizyOaaiAVmeMItg6KcxfJcz_L_VebiMSAGUg2vhYzXjj4mfJie6pPm";
 	public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 	
 	private static FCMServer fcmServer = new FCMServer( );
@@ -81,7 +80,7 @@ public class FCMServer {
 	}
 	
 	public void send() throws Exception {
-		this.pushFCMNotification(AUTH_KEY_ANDROID_KEY);
+		//this.pushFCMNotification(AUTH_KEY_ANDROID_KEY);
 		this.pushFCMNotification(AUTH_KEY_IOS_KEY);
 	}
 	
@@ -93,9 +92,8 @@ public class FCMServer {
 		
 	}
 	
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		FCMServer fcmServer = getInstance();
-		//fcmServer.pushFCMNotification(AUTH_KEY_ANDROID_KEY);
 		fcmServer.pushFCMNotification(AUTH_KEY_IOS_KEY);
-	}
+	}*/
 }

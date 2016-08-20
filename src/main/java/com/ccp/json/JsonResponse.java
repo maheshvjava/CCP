@@ -13,7 +13,8 @@ public class JsonResponse {
 	private static final String TRIP_NOT_EXISTS = "Trip not exists";
 	private static final String TRIP_OWNER_CANNOT_REUQSET = "As you are the Owner of this trip, you can't request for car-pool for your own trip.";
 	private static final String NEED_VEHICLE_INFO_MSG = "Vehicle information is required to creating a trip.";
-	 
+	private static final String UPDATE_YOUR_PROFILE = "Before requesting for a pool please update your profile";
+	
 	private String type;
 	
 	private String message;
@@ -102,6 +103,14 @@ public class JsonResponse {
 		this.message = "{\"message\": \""+NEED_VEHICLE_INFO_MSG+"\"}";
 		this.token = null;
 		this.statusCode = 105;
+		return this.buildMessage();
+	}
+	
+	public String getMsgUpdatingYourProfile() {
+		this.type = "false";
+		this.message = "{\"message\": \""+UPDATE_YOUR_PROFILE+"\"}";
+		this.token = null;
+		this.statusCode = 106;
 		return this.buildMessage();
 	}
 	

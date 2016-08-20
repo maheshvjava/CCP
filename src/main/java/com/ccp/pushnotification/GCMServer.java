@@ -54,7 +54,7 @@ public class GCMServer {
                     //Please add here your project API key: "Key for browser apps (with referers)".
                     //If you added "API key Key for server apps (with IP locking)" or "Key for Android apps (with certificates)" here
                     //then you may get error responses.
-                    Sender sender = new  Sender(ConstantParams.GCMServerKey);
+                    Sender sender = new  Sender(ConstantParams.ServerKey);
 
                     // use this to send message with payload data
                     Message message = new Message.Builder()

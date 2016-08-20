@@ -31,9 +31,15 @@ public class AuthenticationController extends BaseController {
 	public String login(@RequestBody User userfromreq, BindingResult result, SessionStatus status,
 			HttpServletRequest request) throws ParseException {
 		
-		if(request.getHeader("deviceId") == null && request.getHeader("deviceId").isEmpty()) {
+		try {
+			if(request.getHeader("deviceId").isEmpty()) {
+				return JsonResponse.getInstance().getInsufficientMessage();
+			}
+		}
+		catch(NullPointerException ne) {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
+			
 		if(!this.requiredParamsForLogin(userfromreq)) {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}

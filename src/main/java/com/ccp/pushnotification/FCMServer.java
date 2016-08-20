@@ -1,22 +1,15 @@
 package com.ccp.pushnotification;
 
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Date;
 
-import org.json.simple.JSONObject;
+import com.ccp.controller.ConstantParams;
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
 
 public class FCMServer {
 	
-	//Method to send Notifications from server to client end.
-	public final static String AUTH_KEY_FCM = "AIzaSyByCTvA4oGLNUU-kwAa2pl-ijF7gQlyvHc";
-	public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 	
-	//sample token
-	//cEhiDTXmQwk:APA91bFcTTUy0cSQbLOV1kZdrD7u32oIe0fzGkMk3lxNLBUhnzRumX0SeIPJ1cAAap3InwCa098EaAl0N1f6NAizyOaaiAVmeMItg6KcxfJcz_L_VebiMSAGUg2vhYzXjj4mfJie6pPm
-	
-	private static FCMServer fcmServer = new FCMServer( );
+	private static FCMServer gcmServer = new FCMServer( );
 	
 	/* A private Constructor prevents any other 
 	* class from instantiating.
@@ -25,68 +18,85 @@ public class FCMServer {
 
 	/* Static 'instance' method */
 	public static FCMServer getInstance( ) {
-	  return fcmServer;
+	  return gcmServer;
 	}
 	
-	private String title;
+	private String deviceKey;
 	
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
 	private String message;
 	
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getMessage() {
+    public String getMessage() {
 		return message;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+	public void pushNotification(String deviceId) {
+		final String fcmdeviceId = deviceId;
+		new Thread(){
 
-	//userDeviceIdKey is the device id you will query from your database
-	@SuppressWarnings("unchecked")
-	public void pushNotification(String userDeviceIdKey) throws Exception {
-		
-		String authKey = AUTH_KEY_FCM;   // You FCM AUTH key
-		String FMCurl = API_URL_FCM;     
-		
-		URL url = new URL(FMCurl);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            public void run(){
+     
+                try {
+                	
+                	FCMServer fcmserver = getInstance();
+                	
+                    //Please add here your project API key: "Key for browser apps (with referers)".
+                    //If you added "API key Key for server apps (with IP locking)" or "Key for Android apps (with certificates)" here
+                    //then you may get error responses.
+                    FCMSender sender = new  FCMSender(ConstantParams.ServerKey);
 
-		conn.setUseCaches(false);
-		conn.setDoInput(true);
-		conn.setDoOutput(true);
+                    // use this to send message with payload data
+                    Message message = new Message.Builder()
+                    .collapseKey("message")
+                    .timeToLive(3)
+                    .delayWhileIdle(true)
+                    .addData("message", fcmserver.getMessage()) //you can get this message on client side app
+                    .build();  
+  
+                    //Use this code to send notification message to a single device
+                    Result result = sender.send(message, fcmdeviceId, 1);
+                    System.out.println("Message Result: "+result.toString()); //Print message result on console
 
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Authorization","key="+authKey);
-		conn.setRequestProperty("Content-Type","application/json");
-		
-		JSONObject json = new JSONObject();
-		json.put("to",userDeviceIdKey.trim());
-		JSONObject info = new JSONObject();
-		info.put("title", this.title);   // Notification title
-		info.put("body", this.message); // Notification body
-		json.put("notification", info);
+                    /*//Use this code to send notification message to multiple devices
+                    ArrayList<String> devicesList = new ArrayList<String>();
+                    //add your devices RegisterationID, one for each device                
+                    devicesList.add("APA91bEbKqwTbvvRuc24vAYljcrhslOw-jXBqozgH8C2OB3H8R7U00NbIf1xp151ptweX9VkZXyHMik022cNrEETm7eM0Z2JnFksWEw1niJ2sQfU3BjQGiGMq8KsaQ7E0jpz8YKJNbzkTYotLfmertE3K7RsJ1_hAA");    
+                    devicesList.add("APA91bEVcqKmPnESzgnGpEstHHymcpOwv52THv6u6u2Rl-PaMI4mU3Wkb9bZtuHp4NLs4snBl7aXXVkNn-IPEInGO2jEBnBI_oKEdrEoTo9BpY0i6a0QHeq8LDZd_XRzGRSv_R0rjzzZ1b6jXY60QqAI4P3PL79hMg");    
 
-		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		wr.write(json.toString());
-		wr.flush();
-		conn.getInputStream();
-		
-		System.out.println(json.toString());
+                    //Use this code for multicast messages    
+                    MulticastResult multicastResult = sender.send(message, devicesList, 0);
+                    System.out.println("Message Result: "+multicastResult.toString());//Print multicast message result on console
+*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();  
 	}
 	
-	public void buildMessage(String username, Date datetime, String source) {
+	public void buildMessage(String token, String username, Date datetime, String source) {
 		
-		this.message = username +" sent car-pool request for trip scheduled on " + 
+		String body = username +" sent car-pool request for trip scheduled on " + 
 					  datetime +" starting from "+ source; 
-		this.title = "Car pool request sent by "+ username;
+		String title = "Car pool request sent by "+ username;
 		
+		String response = "{"
+				 + "\"token\": \""+token+"\" ,"
+				 + "\"notification\": {"
+				 				+ "\"body\": \""+body+"\", "
+				 				+  "\"title\": \""+title+"\" "
+				 			 + "}, ";
+		this.setMessage(response);
 	}
-	
 }

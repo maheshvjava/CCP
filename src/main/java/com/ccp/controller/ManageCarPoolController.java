@@ -67,10 +67,6 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getAuthErrorMessage();
 		}
 		
-		if(request.getHeader("registerationID") == null) {
-			return JsonResponse.getInstance().getInsufficientMessage();
-		}
-		
 		if(!this.requiredParamsForPoolRequest(poolrqstreq)) {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
@@ -92,7 +88,7 @@ public class ManageCarPoolController extends BaseController {
 		this.poolRqstService.save(poolrqstreq);
 		
 		Usertoken usertoken = this.usertokenService.getUsertoken(user.getId());
-		FCMServer.getInstance().buildMessage(selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
+		FCMServer.getInstance().buildMessage(request.getHeader("token"), selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
 		FCMServer.getInstance().pushNotification(usertoken.getDeviceId());
 		
 		return JsonResponse.getInstance().getPoolRequestsentMessage();

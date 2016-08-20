@@ -170,6 +170,22 @@ public class BaseController implements ServletContextAware {
 		return false;
 	}
 	
+	public boolean requiredParamsForUpdateProfile(User user) {
+		
+		try {
+			if(!user.getEmpid().isEmpty() && user.getGender() != 0 && !user.getMobileNumber().isEmpty()
+			   && !user.getUseremail().isEmpty() && !user.getUsername().isEmpty() 
+			   && user.getDob() != null && !user.getUserimage().isEmpty()) {
+			   return true;
+			}
+		}
+		catch(NullPointerException n) {
+			return false;
+		}
+		
+		return false;
+	}
+	
 	public boolean requiredParamsForUpdatevehicle(Vehicle vehicle) {
 		
 		try {

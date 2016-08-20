@@ -50,6 +50,10 @@ public class UserController extends BaseController {
 			return JsonResponse.getInstance().getAuthErrorMessage();
 		}
 		
+		if(!this.requiredParamsForUpdateProfile(userfromreq)) {
+			return JsonResponse.getInstance().getInsufficientMessage();
+		}
+		
 		user.setDob(userfromreq.getDob());
 		user.setEmpid(userfromreq.getEmpid());
 		user.setGender(userfromreq.getGender());

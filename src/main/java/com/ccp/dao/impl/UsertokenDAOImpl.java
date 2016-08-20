@@ -119,7 +119,12 @@ public class UsertokenDAOImpl implements UsertokenDAO {
     public Usertoken getUsertoken(int userid) {
     	Session session = this.sessionFactory.openSession();
 		try {
-			return (Usertoken) session.load(Usertoken.class, userid);
+			Criteria criteria = session.createCriteria(Usertoken.class);
+       		criteria.add(Restrictions.eq("userid", userid));
+       		
+       		@SuppressWarnings("unchecked")
+			List<Usertoken> usertokens = criteria.list();
+       		return usertokens.get(0);
 		}
 		catch(HibernateException hbe) {
 			logger.error("Something went wrong in UsertokenDAOImpl::getUsertoken");

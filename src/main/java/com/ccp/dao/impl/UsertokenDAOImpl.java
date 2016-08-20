@@ -1,6 +1,5 @@
 package com.ccp.dao.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -44,7 +43,7 @@ public class UsertokenDAOImpl implements UsertokenDAO {
 			return null;
        	}
    		catch(HibernateException hbe) {
-   			logger.error("Error in DB - User::checkAccountExists");
+   			logger.error("Error in DB - UsertokenDAOImpl::checkAccountExists");
    			throw new ExceptionInInitializerError(hbe);
    		} 
    		finally {
@@ -66,7 +65,7 @@ public class UsertokenDAOImpl implements UsertokenDAO {
 			query.executeUpdate();
 		}
 		catch(HibernateException hbe) {
-			logger.error("Something went wrong in UserDAOImpl::deleteToken");
+			logger.error("Something went wrong in UsertokenDAOImpl::deleteToken");
 			throw new ExceptionInInitializerError(hbe);
 		} 
 		finally {
@@ -77,16 +76,12 @@ public class UsertokenDAOImpl implements UsertokenDAO {
 		}
 	}
     
-    public Usertoken save(int userid, String token, Date lastaccesstime) 
+    public Usertoken save(Usertoken usertoken) 
     {
     	Session session = this.sessionFactory.openSession();
     	try {
-	    	Usertoken userToken = new Usertoken();
-	   		userToken.setToken(token);
-	   		userToken.setUserid(userid);
-	   		userToken.setLastaccesstime(lastaccesstime);
-	   		session.save(userToken);
-	   		return userToken;
+	   		session.save(usertoken);
+	   		return usertoken;
     	}
    		catch(HibernateException hbe) {
    			logger.error("Error in DB - UsertokenDAOImpl::save");
@@ -110,7 +105,7 @@ public class UsertokenDAOImpl implements UsertokenDAO {
 			query.executeUpdate();
 		}
 		catch(HibernateException hbe) {
-			logger.error("Something went wrong in UserDAOImpl::deleteTokens");
+			logger.error("Something went wrong in UsertokenDAOImpl::deleteTokens");
 			throw new ExceptionInInitializerError(hbe);
 		} 
 		finally {
@@ -120,4 +115,21 @@ public class UsertokenDAOImpl implements UsertokenDAO {
 			}
 		}
 	}
+    
+    public Usertoken getUsertoken(int userid) {
+    	Session session = this.sessionFactory.openSession();
+		try {
+			return (Usertoken) session.load(Usertoken.class, userid);
+		}
+		catch(HibernateException hbe) {
+			logger.error("Something went wrong in UsertokenDAOImpl::getUsertoken");
+			throw new ExceptionInInitializerError(hbe);
+		} 
+		finally {
+			if(session.isOpen()){
+				session.flush();
+				session.close();
+			}
+		} 
+    }
 }

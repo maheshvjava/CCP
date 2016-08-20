@@ -24,6 +24,16 @@ public class Usertoken implements Serializable {
 	private String token;
 
 	private int userid;
+	
+	private String deviceId;
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
 
 	public Usertoken() {
 	}

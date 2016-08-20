@@ -11,8 +11,10 @@ public class FCMServer {
 	
 	//Method to send Notifications from server to client end.
 	public final static String AUTH_KEY_FCM = "AIzaSyByCTvA4oGLNUU-kwAa2pl-ijF7gQlyvHc";
-	public final static String AUTH_KEY_IOS_KEY = "cEhiDTXmQwk:APA91bFcTTUy0cSQbLOV1kZdrD7u32oIe0fzGkMk3lxNLBUhnzRumX0SeIPJ1cAAap3InwCa098EaAl0N1f6NAizyOaaiAVmeMItg6KcxfJcz_L_VebiMSAGUg2vhYzXjj4mfJie6pPm";
 	public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
+	
+	//sample token
+	//cEhiDTXmQwk:APA91bFcTTUy0cSQbLOV1kZdrD7u32oIe0fzGkMk3lxNLBUhnzRumX0SeIPJ1cAAap3InwCa098EaAl0N1f6NAizyOaaiAVmeMItg6KcxfJcz_L_VebiMSAGUg2vhYzXjj4mfJie6pPm
 	
 	private static FCMServer fcmServer = new FCMServer( );
 	
@@ -48,7 +50,7 @@ public class FCMServer {
 
 	//userDeviceIdKey is the device id you will query from your database
 	@SuppressWarnings("unchecked")
-	public void pushFCMNotification(String userDeviceIdKey) throws Exception {
+	public void pushNotification(String userDeviceIdKey) throws Exception {
 		
 		String authKey = AUTH_KEY_FCM;   // You FCM AUTH key
 		String FMCurl = API_URL_FCM;     
@@ -79,11 +81,6 @@ public class FCMServer {
 		System.out.println(json.toString());
 	}
 	
-	public void send() throws Exception {
-		//this.pushFCMNotification(AUTH_KEY_ANDROID_KEY);
-		this.pushFCMNotification(AUTH_KEY_IOS_KEY);
-	}
-	
 	public void buildMessage(String username, Date datetime, String source) {
 		
 		this.message = username +" sent car-pool request for trip scheduled on " + 
@@ -92,8 +89,4 @@ public class FCMServer {
 		
 	}
 	
-	/*public static void main(String[] args) throws Exception {
-		FCMServer fcmServer = getInstance();
-		fcmServer.pushFCMNotification(AUTH_KEY_IOS_KEY);
-	}*/
 }

@@ -1,7 +1,5 @@
 package com.ccp.service.impl;
 
-import java.util.Date;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ccp.dao.UsertokenDAO;
@@ -30,13 +28,19 @@ public class UsertokenServiceImpl implements UsertokenService {
 	
 	@Override
 	@Transactional
-	public Usertoken save(int userid, String token, Date lastaccesstime) {
-		return this.usertokenDAO.save(userid, token, lastaccesstime);
+	public Usertoken save(Usertoken usertoken) {
+		return this.usertokenDAO.save(usertoken);
 	}
 	
 	@Override
 	@Transactional
 	public void deleteTokens(int userid) {
 		this.usertokenDAO.deleteTokens(userid);
+	}
+	
+	@Override
+	@Transactional
+	public Usertoken getUsertoken(int userid) {
+		return this.usertokenDAO.getUsertoken(userid);
 	}
 }

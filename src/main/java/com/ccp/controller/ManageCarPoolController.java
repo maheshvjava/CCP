@@ -25,6 +25,7 @@ import com.ccp.json.TripExclusionStrategy;
 import com.ccp.model.PoolRqst;
 import com.ccp.model.Trip;
 import com.ccp.model.User;
+import com.ccp.model.Usertoken;
 import com.ccp.pushnotification.FCMServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
@@ -90,8 +91,9 @@ public class ManageCarPoolController extends BaseController {
 		poolrqstreq.setGoogleid(user.getGoogleid());
 		this.poolRqstService.save(poolrqstreq);
 		
+		Usertoken usertoken = this.usertokenService.getUsertoken(user.getId());
 		FCMServer.getInstance().buildMessage(selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
-		FCMServer.getInstance().send();
+		FCMServer.getInstance().pushNotification(usertoken.getDeviceId());
 		
 		return JsonResponse.getInstance().getPoolRequestsentMessage();
 	}

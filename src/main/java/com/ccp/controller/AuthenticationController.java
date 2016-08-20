@@ -15,6 +15,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.ccp.json.JsonResponse;
 import com.ccp.model.User;
+import com.ccp.model.Usertoken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,6 +31,9 @@ public class AuthenticationController extends BaseController {
 	public String login(@RequestBody User userfromreq, BindingResult result, SessionStatus status,
 			HttpServletRequest request) throws ParseException {
 		
+		if(request.getHeader("deviceId") == null && request.getHeader("deviceId").isEmpty()) {
+			return JsonResponse.getInstance().getInsufficientMessage();
+		}
 		if(!this.requiredParamsForLogin(userfromreq)) {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
@@ -38,17 +42,24 @@ public class AuthenticationController extends BaseController {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat(ConstantParams.dbDateTimeFormat);
 		String formattedDate = sdf.format(date);
-		String usertoken = userfromreq.getGoogleid() + ConstantParams.tokensep + userfromreq.getUserclienttype() + ConstantParams.tokensep + formattedDate;
-		String encryptedtoken = CipherUtils.encrypt(usertoken);
+		String authtoken = userfromreq.getGoogleid() + ConstantParams.tokensep + userfromreq.getUserclienttype() + ConstantParams.tokensep + formattedDate;
+		String encryptedauthtoken = CipherUtils.encrypt(authtoken);
 		
 		if(user == null) {
 			user = this.userService.save(userfromreq);
 		}
 		this.usertokenService.deleteTokens(user.getId());
-		this.usertokenService.save(user.getId(), encryptedtoken, sdf.parse(formattedDate));
+		
+		Usertoken usertoken = new Usertoken();
+		
+		usertoken.setUserid(user.getId());
+		usertoken.setToken(encryptedauthtoken);
+		usertoken.setLastaccesstime(sdf.parse(formattedDate));
+		usertoken.setDeviceId(request.getHeader("deviceId"));
+		this.usertokenService.save(usertoken);
 		
 		Gson gson = new GsonBuilder().setDateFormat(ConstantParams.dateInputFormat).create();
-		return JsonResponse.getInstance().getLoginSuccessMessage(gson.toJson(user), encryptedtoken);
+		return JsonResponse.getInstance().getLoginSuccessMessage(gson.toJson(user), encryptedauthtoken);
 	}
 	
 	@RequestMapping(value="/logout", method= {RequestMethod.POST}, consumes = { "application/json;charset=utf-8"},  produces = { "application/json;harset=utf-8" } )

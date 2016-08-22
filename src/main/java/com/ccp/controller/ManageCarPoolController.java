@@ -1,6 +1,7 @@
 package com.ccp.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 
+import com.ccp.common.DistanceCalculator;
 import com.ccp.json.JsonResponse;
 import com.ccp.json.PoolRqstExclusionStrategy;
 import com.ccp.json.TripExclusionStrategy;
@@ -88,7 +90,7 @@ public class ManageCarPoolController extends BaseController {
 		this.poolRqstService.save(poolrqstreq);
 		
 		Usertoken usertoken = this.usertokenService.getUsertoken(user.getId());
-		FCMServer.getInstance().buildMessage(request.getHeader("token"), selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
+		FCMServer.getInstance().buildMessage(selectedTrip.getUser().getUsername(), selectedTrip.getDatetime(), selectedTrip.getSource());
 		FCMServer.getInstance().pushNotification(usertoken.getDeviceId());
 		
 		return JsonResponse.getInstance().getPoolRequestsentMessage();
@@ -128,9 +130,23 @@ public class ManageCarPoolController extends BaseController {
 		}
 		
 		List<Trip> triplist = this.tripService.filterTrips(user.getGoogleid(), tripreq.getDatetime());
+		List<Trip> triplistNew = new ArrayList<Trip>();
+		for(Trip trip : triplist) {
+			
+			double distance = DistanceCalculator.distance(trip.getSourcelat(), trip.getSourcelng(), tripreq.getSourcelat(), tripreq.getSourcelng(), "K");
+			if(distance <= 50) {
+				triplistNew.add(trip);
+			}
+			System.out.println("distance:"+ distance);
+		}
 		
-		Gson gson = new GsonBuilder().setDateFormat(ConstantParams.dateTimeInputFormat).create();
-		return JsonResponse.getInstance().getSuccessMessage(gson.toJson(triplist));
+
+		Gson gson = new GsonBuilder()
+		.setDateFormat(ConstantParams.dateTimeInputFormat)
+	    .setExclusionStrategies(new PoolRqstExclusionStrategy())
+	    .create();
+		
+		return JsonResponse.getInstance().getSuccessMessage(gson.toJson(triplistNew));
 	}
 	
 	@RequestMapping(value="/getrequested/poollist", method= {RequestMethod.GET}, produces = { "application/json;harset=utf-8" } )

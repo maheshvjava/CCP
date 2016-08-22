@@ -1,15 +1,24 @@
 package com.ccp.pushnotification;
 
+import java.io.IOException;
 import java.util.Date;
 
-import com.ccp.controller.ConstantParams;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.springframework.http.MediaType;
 
-public class FCMServer {
+import com.google.gson.JsonObject;
+
+public class FCMServer
+{
+	private String url = "https://fcm.googleapis.com/fcm/send";    
+	private String API_KEY = "AIzaSyByCTvA4oGLNUU-kwAa2pl-ijF7gQlyvHc";  
 	
-	
-	private static FCMServer gcmServer = new FCMServer( );
+	private static FCMServer fcmServer = new FCMServer( );
 	
 	/* A private Constructor prevents any other 
 	* class from instantiating.
@@ -18,17 +27,17 @@ public class FCMServer {
 
 	/* Static 'instance' method */
 	public static FCMServer getInstance( ) {
-	  return gcmServer;
+	  return fcmServer;
 	}
 	
-	private String deviceKey;
+	private String title;
 	
-	public String getDeviceKey() {
-		return deviceKey;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	private String message;
@@ -41,62 +50,71 @@ public class FCMServer {
 		this.message = message;
 	}
 	
-	public void pushNotification(String deviceId) {
-		final String fcmdeviceId = deviceId;
-		new Thread(){
-
-            public void run(){
-     
-                try {
-                	
-                	FCMServer fcmserver = getInstance();
-                	
-                    //Please add here your project API key: "Key for browser apps (with referers)".
-                    //If you added "API key Key for server apps (with IP locking)" or "Key for Android apps (with certificates)" here
-                    //then you may get error responses.
-                    FCMSender sender = new  FCMSender(ConstantParams.ServerKey);
-
-                    // use this to send message with payload data
-                    Message message = new Message.Builder()
-                    .collapseKey("message")
-                    .timeToLive(3)
-                    .delayWhileIdle(true)
-                    .addData("message", fcmserver.getMessage()) //you can get this message on client side app
-                    .build();  
-  
-                    //Use this code to send notification message to a single device
-                    Result result = sender.send(message, fcmdeviceId, 1);
-                    System.out.println("Message Result: "+result.toString()); //Print message result on console
-
-                    /*//Use this code to send notification message to multiple devices
-                    ArrayList<String> devicesList = new ArrayList<String>();
-                    //add your devices RegisterationID, one for each device                
-                    devicesList.add("APA91bEbKqwTbvvRuc24vAYljcrhslOw-jXBqozgH8C2OB3H8R7U00NbIf1xp151ptweX9VkZXyHMik022cNrEETm7eM0Z2JnFksWEw1niJ2sQfU3BjQGiGMq8KsaQ7E0jpz8YKJNbzkTYotLfmertE3K7RsJ1_hAA");    
-                    devicesList.add("APA91bEVcqKmPnESzgnGpEstHHymcpOwv52THv6u6u2Rl-PaMI4mU3Wkb9bZtuHp4NLs4snBl7aXXVkNn-IPEInGO2jEBnBI_oKEdrEoTo9BpY0i6a0QHeq8LDZd_XRzGRSv_R0rjzzZ1b6jXY60QqAI4P3PL79hMg");    
-
-                    //Use this code for multicast messages    
-                    MulticastResult multicastResult = sender.send(message, devicesList, 0);
-                    System.out.println("Message Result: "+multicastResult.toString());//Print multicast message result on console
-*/
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();  
+	public void pushNotification(String token) {
+		JsonObject json  = new JsonObject(); 
+		JsonObject notification = new JsonObject();
+		//JSONArray jsonArray = new JSONArray();    
+		//jsonArray.put(token );   
+		 
+		// for mutliple tokens
+		//json.put("registration_ids",jsonArray);   
+		 
+		// for single token
+		json.addProperty("to", token);       
+		 
+		// populate message
+		notification.addProperty("body", this.getMessage());
+		notification.addProperty("title", this.getTitle());
+		json.add("notification", notification);
+		
+		System.out.println(json.toString());
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		try{
+		 
+			//Create POST request
+			HttpPost request = new HttpPost(url);     
+			request.setHeader("Content-type", MediaType.APPLICATION_JSON.toString()); 
+			request.addHeader("Authorization", "Key="+API_KEY);  
+			
+			StringEntity params = new StringEntity(json.toString());        
+			request.setEntity(params);      
+			 
+			// get response from server
+			HttpResponse response = httpClient.execute(request);       
+			String mresult = EntityUtils.toString(response.getEntity());        
+			 
+			System.out.println("result:" + mresult); 
+		}
+		catch (Exception ex) {     
+			ex.printStackTrace();  
+		} 
+		finally
+		{     
+		   if(httpClient != null)     
+		   {         
+			   try {      
+		          httpClient.close();    
+		       } 
+			   catch (IOException e) { 
+		               e.printStackTrace();       
+			   }       
+		   }  
+		}
 	}
 	
-	public void buildMessage(String token, String username, Date datetime, String source) {
+	public void buildMessage(String username, Date datetime, String source) {
 		
 		String body = username +" sent car-pool request for trip scheduled on " + 
 					  datetime +" starting from "+ source; 
-		String title = "Car pool request sent by "+ username;
-		
-		String response = "{"
-				 + "\"token\": \""+token+"\" ,"
-				 + "\"notification\": {"
-				 				+ "\"body\": \""+body+"\", "
-				 				+  "\"title\": \""+title+"\" "
-				 			 + "}, ";
-		this.setMessage(response);
+		this.setTitle("Car pool request sent by "+ username);
+		this.setMessage(body);
+	}
+	
+	public static void main(String[] args) {
+		FCMServer.getInstance().buildMessage("Satya", new Date(), "Bangalore");
+		FCMServer.getInstance().pushNotification("dAsd3ZV1rok:APA91bErkUuqklRPoCN0I8P5-JTca36Rw18sFfQQdd4Ywzdla6JATxaQXrY2ZCkJNVBwijf-Lj4nk1v1TddgVBvrJNE8Gikmq6MfK1TdefpcTk81GA7RECHHLYum5Fe21cjHrS4B72lC");
 	}
 }
+
+
+ 

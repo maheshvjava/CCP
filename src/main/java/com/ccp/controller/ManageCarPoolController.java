@@ -139,7 +139,6 @@ public class ManageCarPoolController extends BaseController {
 			}
 			System.out.println("distance:"+ distance);
 		}
-		
 
 		Gson gson = new GsonBuilder()
 		.setDateFormat(ConstantParams.dateTimeInputFormat)

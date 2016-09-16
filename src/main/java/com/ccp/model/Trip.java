@@ -29,8 +29,8 @@ public class Trip implements Serializable {
 	public String toString() {
 		return "Trip [id=" + id + ", datetime=" + datetime + ", destination="
 				+ destination + ", destinationlat=" + destinationlat
-				+ ", destinationlng=" + destinationlng + ", googleid="
-				+ googleid + ", polyline=" + polyline + ", source=" + source
+				+ ", destinationlng=" + destinationlng + ", objectid="
+				+ objectid + ", polyline=" + polyline + ", source=" + source
 				+ ", sourcelat=" + sourcelat + ", sourcelng=" + sourcelng
 				+ ", status=" + status + ", poolrqsts=" + poolrqsts 
 				+ ", user="+ user + "]";
@@ -60,7 +60,7 @@ public class Trip implements Serializable {
 
 	private double destinationlng;
 
-	private String googleid;
+	private String objectid;
 
 	private String polyline;
 
@@ -107,12 +107,12 @@ public class Trip implements Serializable {
 		this.destinationlng = destinationlng;
 	}
 
-	public String getGoogleid() {
-		return this.googleid;
+	public String getObjectid() {
+		return this.objectid;
 	}
 
-	public void setGoogleid(String googleid) {
-		this.googleid = googleid;
+	public void setObjectid(String objectid) {
+		this.objectid = objectid;
 	}
 
 	public String getPolyline() {
@@ -169,7 +169,7 @@ public class Trip implements Serializable {
 	}
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="googleid", referencedColumnName="googleid", insertable=false, updatable=false)
+	@JoinColumn(name="objectid", referencedColumnName="objectid", insertable=false, updatable=false)
 	private User user;
 
 	public User getUser() {

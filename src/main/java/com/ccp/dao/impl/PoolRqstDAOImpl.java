@@ -52,7 +52,7 @@ public class PoolRqstDAOImpl implements PoolRqstDAO {
        	try {
        		Criteria criteria = session.createCriteria(PoolRqst.class);
        		criteria.add(Restrictions.eq("tripid", tripid));
-       		criteria.add(Restrictions.eq("googleid", googleid));
+       		criteria.add(Restrictions.eq("objectid", googleid));
 			criteria.setProjection(Projections.rowCount());
 			return (Long)criteria.uniqueResult();
        	}
@@ -74,7 +74,7 @@ public class PoolRqstDAOImpl implements PoolRqstDAO {
 		Session session = this.sessionFactory.openSession();
        	try {
        		Criteria criteria = session.createCriteria(PoolRqst.class);
-       		criteria.add(Restrictions.eq("googleid", googleid));
+       		criteria.add(Restrictions.eq("objectid", googleid));
 			return criteria.list();
        	}
    		catch(HibernateException hbe) {

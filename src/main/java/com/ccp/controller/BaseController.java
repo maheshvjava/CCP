@@ -159,7 +159,7 @@ public class BaseController implements ServletContextAware {
 	public boolean requiredParamsForLogin(User user) {
 			
 		try {
-			if(!user.getGoogleid().isEmpty() && !user.getUserclienttype().isEmpty()) {
+			if(!user.getObjectid().isEmpty() && !user.getUserclienttype().isEmpty()) {
 				 return true;
 			}
 		}

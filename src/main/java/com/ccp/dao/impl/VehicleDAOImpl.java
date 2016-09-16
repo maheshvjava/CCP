@@ -31,7 +31,7 @@ public class VehicleDAOImpl implements VehicleDAO {
     	Session session = this.sessionFactory.openSession();
        	try {
        		Criteria criteria = session.createCriteria(Vehicle.class);
-       		criteria.add(Restrictions.eq("googleid", vehicle.getGoogleid()));
+       		criteria.add(Restrictions.eq("objectid", vehicle.getObjectid()));
        		@SuppressWarnings("unchecked")
 			List<Vehicle> vehicles = criteria.list();
        		if(vehicles.size() > 0) {

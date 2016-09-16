@@ -53,7 +53,7 @@ public class ManageCarPoolController extends BaseController {
 		if(user.getVehicle() == null) {
 			return JsonResponse.getInstance().getNeedVehicleInfoMessage();
 		}
-		tripreq.setGoogleid(user.getGoogleid());
+		tripreq.setObjectid(user.getObjectid());
 		this.tripService.save(tripreq);
 		
 		return JsonResponse.getInstance().getTripSaveMessage();
@@ -78,15 +78,15 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getTripNotExistsMessage();
 		}
 		
-		if(selectedTrip.equals(user.getGoogleid())) {
+		if(selectedTrip.equals(user.getObjectid())) {
 			return JsonResponse.getInstance().getTripOwnerCannotRequestMessage();
 		}
 		
-		if(this.poolRqstService.checkRequestExists(user.getGoogleid(), poolrqstreq.getTripid()) > 0) {
+		if(this.poolRqstService.checkRequestExists(user.getObjectid(), poolrqstreq.getTripid()) > 0) {
 			return JsonResponse.getInstance().getRequestExistsMessage();
 		}
 		
-		poolrqstreq.setGoogleid(user.getGoogleid());
+		poolrqstreq.setObjectid(user.getObjectid());
 		this.poolRqstService.save(poolrqstreq);
 		
 		Usertoken usertoken = this.usertokenService.getUsertoken(user.getId());
@@ -105,7 +105,7 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getAuthErrorMessage();
 		}
 		
-		List<Trip> triplist = this.tripService.tripList(user.getGoogleid());
+		List<Trip> triplist = this.tripService.tripList(user.getObjectid());
 		
 		Gson gson = new GsonBuilder()
 		.setDateFormat(ConstantParams.dateTimeInputFormat)
@@ -129,7 +129,7 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
 		
-		List<Trip> triplist = this.tripService.filterTrips(user.getGoogleid(), tripreq.getDatetime());
+		List<Trip> triplist = this.tripService.filterTrips(user.getObjectid(), tripreq.getDatetime());
 		List<Trip> triplistNew = new ArrayList<Trip>();
 		for(Trip trip : triplist) {
 			
@@ -157,7 +157,7 @@ public class ManageCarPoolController extends BaseController {
 			return JsonResponse.getInstance().getAuthErrorMessage();
 		}
 		
-		List<PoolRqst> poolRqst = this.poolRqstService.getRequestedPoolList(user.getGoogleid());
+		List<PoolRqst> poolRqst = this.poolRqstService.getRequestedPoolList(user.getObjectid());
 		
 		Gson gson = new GsonBuilder()
 		.setDateFormat(ConstantParams.dateTimeInputFormat)

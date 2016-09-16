@@ -54,7 +54,7 @@ public class TripDAOImpl implements TripDAO {
 		Session session = this.sessionFactory.openSession();
        	try {
        		Criteria criteria = session.createCriteria(Trip.class);
-       		criteria.add(Restrictions.eq("googleid", googleid));
+       		criteria.add(Restrictions.eq("objectid", googleid));
        		criteria.add(Restrictions.sqlRestriction("{alias}.datetime >= NOW()"));
        		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
        		return criteria.list();
@@ -105,7 +105,7 @@ public class TripDAOImpl implements TripDAO {
 			
        		Criteria criteria = session.createCriteria(Trip.class);
 			criteria.add(Restrictions.eq("status", 0));
-			criteria.add(Restrictions.ne("googleid", googleid));
+			criteria.add(Restrictions.ne("objectid", googleid));
 			criteria.add(Restrictions.sqlRestriction(sqlWhere));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();

@@ -20,7 +20,7 @@ public class Vehicle implements Serializable {
 
 	private String company;
 
-	private String googleid;
+	private String objectid;
 
 	private String mfgYear;
 
@@ -49,12 +49,12 @@ public class Vehicle implements Serializable {
 		this.company = company;
 	}
 
-	public String getGoogleid() {
-		return this.googleid;
+	public String getObjectid() {
+		return this.objectid;
 	}
 
-	public void setGoogleid(String googleid) {
-		this.googleid = googleid;
+	public void setObjectid(String objectid) {
+		this.objectid = objectid;
 	}
 
 	public String getMfgYear() {

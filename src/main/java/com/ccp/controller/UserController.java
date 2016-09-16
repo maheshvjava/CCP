@@ -34,7 +34,7 @@ public class UserController extends BaseController {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
 		
-		vehicle.setGoogleid(user.getGoogleid());
+		vehicle.setObjectid(user.getObjectid());
 		vehicle = this.vehicleService.save(vehicle);
 		
 		Gson gson = new GsonBuilder().create();

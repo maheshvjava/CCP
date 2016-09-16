@@ -31,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
     	Session session = this.sessionFactory.openSession();
        	try {
        		Criteria criteria = session.createCriteria(User.class)
-       							.add(Restrictions.eq("googleid", googleid));
+       							.add(Restrictions.eq("objectid", googleid));
 			@SuppressWarnings("unchecked")
 			List<User> users = criteria.list();
 			if(users.size() > 0) {

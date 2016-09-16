@@ -43,12 +43,12 @@ public class AuthenticationController extends BaseController {
 		if(!this.requiredParamsForLogin(userfromreq)) {
 			return JsonResponse.getInstance().getInsufficientMessage();
 		}
-		User user = this.userService.checkAccountExists(userfromreq.getGoogleid());
+		User user = this.userService.checkAccountExists(userfromreq.getObjectid());
 		
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat(ConstantParams.dbDateTimeFormat);
 		String formattedDate = sdf.format(date);
-		String authtoken = userfromreq.getGoogleid() + ConstantParams.tokensep + userfromreq.getUserclienttype() + ConstantParams.tokensep + formattedDate;
+		String authtoken = userfromreq.getObjectid() + ConstantParams.tokensep + userfromreq.getUserclienttype() + ConstantParams.tokensep + formattedDate;
 		String encryptedauthtoken = CipherUtils.encrypt(authtoken);
 		
 		if(user == null) {
@@ -73,8 +73,8 @@ public class AuthenticationController extends BaseController {
 			HttpServletRequest request) {
 		
 		try {
-			if(!userfromreq.getGoogleid().isEmpty()) {
-				User user = this.userService.checkAccountExists(userfromreq.getGoogleid());
+			if(!userfromreq.getObjectid().isEmpty()) {
+				User user = this.userService.checkAccountExists(userfromreq.getObjectid());
 				if(user != null) {
 					this.usertokenService.deleteTokens(user.getId());
 				}

@@ -28,7 +28,7 @@ public class PoolRqst implements Serializable {
 
 	private double destinationlng;
 	
-	private String googleid;
+	private String objectid;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date laststatusupdatedatetime;
@@ -80,12 +80,12 @@ public class PoolRqst implements Serializable {
 		this.destinationlng = destinationlng;
 	}
 
-	public String getGoogleid() {
-		return this.googleid;
+	public String getObjectid() {
+		return this.objectid;
 	}
 
-	public void setGoogleid(String googleid) {
-		this.googleid = googleid;
+	public void setObjectid(String objectid) {
+		this.objectid = objectid;
 	}
 
 	public Date getLaststatusupdatedatetime() {
@@ -145,7 +145,7 @@ public class PoolRqst implements Serializable {
 	}
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="googleid", referencedColumnName="googleid", insertable=false, updatable=false)
+	@JoinColumn(name="objectid", referencedColumnName="objectid", insertable=false, updatable=false)
 	private User user;
 
 	public User getUser() {

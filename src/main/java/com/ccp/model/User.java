@@ -31,7 +31,7 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", dob=" + dob + ", empid=" + empid
-				+ ", gender=" + gender + ", googleid=" + googleid
+				+ ", gender=" + gender + ", objectid=" + objectid
 				+ ", mobileNumber=" + mobileNumber 
 				+ ", useremail=" + useremail + ", userimage="
 				+ userimage + ", username=" + username + "]";
@@ -44,7 +44,7 @@ public class User implements Serializable {
 
 	private byte gender;
 
-	private String googleid;
+	private String objectid;
 
 	private String mobileNumber;
 
@@ -100,12 +100,12 @@ public class User implements Serializable {
 		this.gender = gender;
 	}
 
-	public String getGoogleid() {
-		return this.googleid;
+	public String getObjectid() {
+		return this.objectid;
 	}
 
-	public void setGoogleid(String googleid) {
-		this.googleid = googleid;
+	public void setObjectid(String objectid) {
+		this.objectid = objectid;
 	}
 
 	public String getMobileNumber() {
@@ -141,7 +141,7 @@ public class User implements Serializable {
 	}
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="googleid", referencedColumnName="googleid", insertable=false, updatable=false)
+	@JoinColumn(name="objectid", referencedColumnName="objectid", insertable=false, updatable=false)
 	private Vehicle vehicle;
 
 	public Vehicle getVehicle() {

@@ -192,7 +192,6 @@ public class ManageCarPoolController extends BaseController {
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	    HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-	     
 	    ResponseEntity<String> dirresult = restTemplate.exchange(googleMapApiUrl, HttpMethod.GET, entity, String.class);
 		
 		return JsonResponse.getInstance().getSuccessMessage(dirresult.getBody());

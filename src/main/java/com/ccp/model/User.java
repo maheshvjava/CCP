@@ -50,7 +50,9 @@ public class User implements Serializable {
 
 	private String useremail;
 
-	private String userimage;
+	@Lob @Basic(fetch = FetchType.LAZY)
+	@Column(name="userimage", nullable=false)
+	private byte[] userimage;
 
 	private String username;
 	
@@ -124,11 +126,11 @@ public class User implements Serializable {
 		this.useremail = useremail;
 	}
 
-	public String getUserimage() {
+	public byte[] getUserimage() {
 		return this.userimage;
 	}
 
-	public void setUserimage(String userimage) {
+	public void setUserimage(byte[] userimage) {
 		this.userimage = userimage;
 	}
 

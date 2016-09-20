@@ -175,7 +175,7 @@ public class BaseController implements ServletContextAware {
 		try {
 			if(!user.getEmpid().isEmpty() && user.getGender() != 0 && !user.getMobileNumber().isEmpty()
 			   && !user.getUseremail().isEmpty() && !user.getUsername().isEmpty() 
-			   && user.getDob() != null && !user.getUserimage().isEmpty()) {
+			   && user.getDob() != null && user.getUserimage().length > 0) {
 			   return true;
 			}
 		}

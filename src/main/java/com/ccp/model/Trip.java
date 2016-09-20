@@ -1,19 +1,26 @@
 package com.ccp.model;
 
 import java.io.Serializable;
-
-import javax.persistence.*;
-
-import com.ccp.json.CustomJsonDateDeserializerWithoutTimeZone;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.ccp.json.CustomJsonDateDeserializerWithoutTimeZone;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 
 /**
@@ -54,6 +61,7 @@ public class Trip implements Serializable {
 	@JsonDeserialize(using = CustomJsonDateDeserializerWithoutTimeZone.class)
 	private Date datetime;
 
+	
 	private String destination;
 
 	private double destinationlat;
